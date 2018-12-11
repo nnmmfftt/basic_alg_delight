@@ -1,5 +1,8 @@
 /**
- DEtermines which of the 256 Boolean functions of three variables can be implemented with three binary Boolean instructions if the instruction set includes all 16 binary Boolean operations.
+ * DEtermines which of the 256 Boolean functions of 
+ * three variables can be implemented with three binary 
+ * Boolean instructions if the instruction set includes
+ * all 16 binary Boolean operations.
 **/
 
 #include <stdio.h>
@@ -31,7 +34,8 @@ int main(){
 	int i, j, o1, i1, i2, o2, j1, j2, o3, k1, k2;
 	unsigned char fun[6];
 /**
-Truth table, 3 columns for x, y, and z, and 3 columns for computed functions.
+ * Truth table, 3 columns for x, y, and z,
+ * and 3 columns for computed functions.
 **/
 	fun[0] = 0x0F; // Truth table column for x,
 	fun[1] = 0x33; // y,
