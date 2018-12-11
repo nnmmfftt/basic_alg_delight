@@ -1,5 +1,5 @@
 /**
- * DEtermines which of the 256 Boolean functions of 
+ * Determines which of the 256 Boolean functions of 
  * three variables can be implemented with three binary 
  * Boolean instructions if the instruction set includes
  * all 16 binary Boolean operations.

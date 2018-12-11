@@ -1,11 +1,17 @@
 #include <stdlib.h>
 
-int maxstr(unsigned x){
+/**
+ * Max length of 1-bit string
+**/
+int maxstr1(unsigned x){
 	int k;
 	for (k = 0; x!= 0; k++) x = x & 2*x;
 	return k;
 }
 
+/**
+ * Max length of 1-bit string and position
+**/
 int fmaxstr1(unsigned x, int *apos){
 	unsigned y;
 	int s;
