@@ -18,20 +18,20 @@ void ld_Gosper(int (*f)(int), int X0, int *mu_1,
 	Xn = X0;
 	for (n = 1;; n++){
 		Xn = f(Xn);
-		kmax = 31-nlz(n);		//Floor(log2 n).
+		kmax = 31-nlz(n);		// Floor(log2 n).
 		for(k = 0; k <= kmax; k++){
 			if(Xn == T[k]) goto L;
 		}
-		T[ntz(n+1)] = Xn;		//No match.
+		T[ntz(n+1)] = Xn;		// No match.
 	}
 L:
 	// Compute m = max{i|i<n and ntz(i+1) = k}.
 
 	m = ((((n >> k) -1) |1) << k) -1;
 	*lambda = n-m;
-	lg1 = 31 - nlz(*lambda -1);     //Ceil(log2 lambda) -1.
-	*mu_u = m;					    //Upper bound on mu.
-	*mu_l = m - max(1, 1<< lg1) +1; //Lower bound on mu.
+	lg1 = 31 - nlz(*lambda -1);     // Ceil(log2 lambda) -1.
+	*mu_u = m;					    // Upper bound on mu.
+	*mu_l = m - max(1, 1<< lg1) +1; // Lower bound on mu.
 
 }
 
@@ -56,9 +56,10 @@ int zbytel_Nobranch(unsigned x){
 }
 
 
-
+/*
 int main(){
 	add_before_overflow();
 	return 0;
 }
 
+*/

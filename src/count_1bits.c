@@ -1,6 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+int pop_badbits(int num){
+	int count = 0;
+    unsigned int flag = 1;
+    while(flag){
+        if(num & flag)
+            count++;
+        flag = flag << 1;
+    }
+    return count;
+}
+
 int pop(unsigned x){
 	/**
 	 * Compute 1 bits.

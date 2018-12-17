@@ -34,4 +34,8 @@ int32_t delight_abs(int32_t x, int32_t y){
 	else if(x <=y) return (y-x)>>1;
 	int32_t t = (x&y)+((x^y)>>1);
 	return t+((t>>31)&(x^y));
-	}
+}
+
+int average_unusebit(int m,int n){
+    return (m + n) >> 1;
+}
