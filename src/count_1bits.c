@@ -1,6 +1,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
+
+
+/** 
+ *********************************************************************************
+ *********************************************************************************
+ *********************************************************************************
+ *********************************************************************************
+ *********************************************************************************
+ *********************************************************************************
+ *********************************************************************************
+ *********************************************************************************
 /**
  * @pop:
  * -----------------------Population count instruction-----------------------
@@ -78,7 +90,9 @@ int pop4(unsigned x){
  * -------------------------(unsigned)------------------------------
  * -----------------------------------------------------------------
  * -----------------------------------------------------------------
+ * ------------------@ using digit summing method ------------------
  **/
+
 /**
  * Lookup register & Population counting method compute remainder signed int div by 3.
 **/
@@ -136,7 +150,7 @@ int remu5(unsigned n){
 	n = (n >> 16) + (n & 0xFFFF);				// Max 0x1FFFE.
 	n = (n >>  8) + (n & 0x00FF);				// Max 0x2FD.
 	n = (n >>  4) + (n & 0x000F);				// Max 0x3D.
-	n = (n >> 4) - ((n >> 2) & 3) + (n & 3);	// -3 to 6.
+	n = (n >>  4) - ((n >> 2) & 3) + (n & 3);	// -3 to 6.
 	return (01043210432 >> 3*(n + 3)) & 7;		// Octal const.
 }
 
@@ -178,6 +192,7 @@ int remu9(unsigned n){
  * -------------------------(signed)--------------------------------
  * -----------------------------------------------------------------
  * -----------------------------------------------------------------
+ * ------------------@ using digit summing method ------------------
  **/
 
 /**
@@ -202,7 +217,7 @@ int rems3(int n){
 /**
  * Lookup memory method compute remainder signed int div by 5.
 **/
-int remu5(int n){
+int rems5(int n){
 	int r;
 	static char table[62] = {2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
 		0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 
@@ -218,7 +233,7 @@ int remu5(int n){
 /**
  * Lookup memory method compute remainder signed int div by 7.
 **/
-int remu7(int n){
+int rems7(int n){
 	int r;
 	static char table[75] =        {5,6, 0,1,2,3,4,5,6,
 		   0,1,2,3,4,5,6, 0,1,2,3,4,5,6, 0,1,2,3,4,5,6,
@@ -234,7 +249,7 @@ int remu7(int n){
 /**
  * Lookup memory method compute remainder signed int div by 9.
 **/
-int remu9(int n){
+int rems9(int n){
 	int r;
 	static char table[75] =  {7,8, 0,1,2,3,4,5,6,7,8,
 				0,1,2,3,4,5,6,7,8, 0,1,2,3,4,5,6,7,8,
@@ -247,6 +262,244 @@ int remu9(int n){
 	r = table[r+2];
 	return r - (((int)(n & -r) >> 31) & 9);
 }
+
+/**
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * -------------------------(unsigned)------------------------------
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * -------------------@ using mutiply method------------------------
+ **/
+
+/**
+ * Using mutiply method to compute remainder unsigned int div. by 3.
+**/
+int remu3a(unsigned n){
+	return (0x55555555*n + (n >> 1) - (n >> 3)) >> 30;
+}
+
+/**
+ * Using enpanded mutiply method to compute remainder unsigned int div. by 3.
+**/
+int remu3b(unsigned n){
+	unsigned r;
+
+	r = n + (n << 2);
+	r = r + (r << 4);
+	r = r + (r << 8);
+	r = r + (r << 16);
+	r = r + (n >> 1);
+	r = r - (n >> 3);
+	return r >> 30;
+}
+
+/**
+ * Using mutiply method to compute remainder unsigned int div. by 5.
+ * @ (in-register)
+ **/
+int remu5(unsigned n){
+	n = (0x33333333*n + (n >> 3)) >> 29;
+	return (0x04432210 >> (n << 2)) & 7;
+}
+
+/**
+ * Using mutiply method to compute remainder unsigned int div. by 7.
+ * @ (in-register)
+ **/
+int remu7(unsigned n){
+	n = (0x24924924*n + (n >> 1) + (n >> 4)) >> 29;
+	return n & ((int)(n - 7) >> 31);
+}
+
+/**
+ * Using mutiply method to compute remainder unsigned int div. by 9.
+ * @ (memory)
+ **/
+int remu9(unsigned n){
+	static char table[16] = {0, 1, 1, 2, 2, 3, 3, 4,
+							 5, 5, 6, 6, 7, 7, 8, 8};
+	n = (0x1C71C71C*n + (n >> 1)) >> 28;
+	return table[n];
+}
+
+/**
+ * Using mutiply method to compute remainder unsigned int div. by 10.
+ * @ (memory)
+ **/
+int remu10(unsigned n){
+	static char table[16] = {0, 1, 2, 2, 3, 3, 4, 5,
+							 5, 6, 7, 7, 8, 8, 9, 0};
+	n = (0x19999999*n + (n >> 1) + (n >> 3)) >> 28;
+	return table[n];
+}
+
+/**
+ * Using Keane method to compute remainder unsigned int div. by 63.
+ * @ Keane Method
+ **/
+int remu63(unsigned n){
+	unsigned t;
+
+	t = (((n >> 12) + n) >> 10) + (n << 2);
+	t = ((t >> 6) + t + 3) & 0xFF;
+	return (t -(t >> 6)) >> 2;
+}
+
+/**
+ * Using mutiply method to compute remainder unsigned int div. by 63.
+ * @ (in-register)
+ **/
+int remu10(unsigned n){
+	n = (0x04104104*n + (n >> 4) + (n >> 10)) >> 26;
+	return n & ((n - 63) >> 6);				// Change 63 to 0.
+}
+
+/**
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * --------------------------(signed)-------------------------------
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * -------------------@ using mutiply method------------------------
+ **/
+
+/**
+ * Using mutiply method to compute remainder signed int div. by 3.
+ * @ (in-register)
+ **/
+int rems3(int n){
+	unsigned r;
+
+	r = n;
+	r = (0x55555555*r + (r >> 1) - (r >> 3)) >> 30;
+	return r - (((unsigned)n >> 31) << (r & 2));
+}
+
+
+/**
+ * Using mutiply method to compute remainder signed int div. by 5.
+ * @ (Memory)
+ **/
+int rems5(int n){
+	unsigned r;
+	static signed char table[16] = {0, 1, 2, 2, 3, u, 4, 0,
+									u, 0,-4, u,-3,-2,-2,-1};
+	r = n;
+	r = ((0x33333333*r) + (r >> 3)) >> 29;
+	return table[r + (((unsigned)n >> 31) << 3)];
+}
+
+/**
+ * Using mutiply method to compute remainder signed int div. by 7.
+ * @ (in-register)
+ **/
+int rems7(int n){
+	unsigned r;
+	
+	r = n - (((unsigned)n >> 31) << 2);			// Fix for sign.
+	r = ((0x24924924*r) + (r >> 1) + (r >> 4)) >> 29;
+	r = r & ((int)(r - 7) >> 31);				// Change 7 to 0.
+	return r - (((int)(n & -r) >> 31) & 7);		// Fix n < 0 case.
+}
+
+
+
+/**
+ * Using mutiply method to compute remainder signed int div. by 9.
+ * @ (Memory)
+ **/
+int rems9(int n){
+	unsigned r;
+	static signed char table[32] = {0, 1, 1, 2, u, 3, u, 4,
+									5, 5, 6, 6, 7, u, 8, u,
+								   -4, u,-3, u,-2,-1,-1, 0,
+									u,-8, u,-7,-6,-6,-5,-5};
+	r = n;
+	r = ((0x1C71C71C*r) + (r >> 1)) >> 28;
+	return table[r + (((unsigned)n >> 31) << 4)];
+}
+
+
+
+/**
+ * Using mutiply method to compute remainder signed int div. by 10.
+ * @ (Memory)
+ **/
+int rems9(int n){
+	unsigned r;
+	static signed char table[32] = {0, 1, u, 2, 3, u, 4, 5,
+									5, 6, u, 7, 8, u, 9, u,
+								   -6,-5, u,-4,-3,-3,-2, u,
+								   -1, 0, u,-9, u,-8,-7, u};
+	r = n;
+	r = ((0x19999999*r) + (r >> 1) + (r >> 3)) >> 28;
+	return table[r + (((unsigned)n >> 31) << 4)];
+}
+
+
+/**
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * -------------------------(unsigned)------------------------------
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * -------------------@ using exact division------------------------
+ **/
+
+
+/**
+ * Using exact division method to compute remainder unsigned int div. by 3.
+ * @ (in-register)
+ **/
+unsigned divu3(unsigned n){
+	unsigned r;
+
+	r = (0x55555555*n + (n >> 1) - (n >> 3)) >> 30;
+	return (n - r)*0xAAAAAAAB;
+}
+
+
+
+/**
+ * Using exact division method to compute remainder unsigned int div. by 10.
+ * @ (Memory)
+ **/
+unsigned divu10(unsigned n){
+	unsigned r;
+	static char table[16] = {0, 1, 2, 2, 3, 3, 4, 5,
+							 5, 6, 7, 7, 8, 8, 9, 0};
+
+	r = (0x19999999*n + (n >> 1) + (n >> 3)) >> 28;
+	r = table[r];
+	return ((n - r) >> 1)*0xCCCCCCCD;
+}
+
+
+
+
+/**
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * --------------------------(signed)-------------------------------
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * -------------------@ using exact division------------------------
+ **/
+
+/**
+ * Using exact division method to compute remainder unsigned int div. by 3.
+ * @ (in-register)
+ **/
+int divu3(int n){
+	unsigned r;
+	
+	r = n;
+	r = (0x55555555*r + (r >> 1) - (r >> 3)) >> 30;
+	r = r - (((unsigned)n >> 31) << (r & 2));
+	return (n - r)*0xAAAAAAAB;
+}
+
 /**
 int main(){
 	printf("%d\n", pop(5));
