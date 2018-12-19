@@ -164,3 +164,18 @@ int iexp(int x, unsigned n){
 		p = p*p;						// Power for next bit for n.
 	}
 }
+
+/**
+ *
+ * @ Estimate the reverse of square root
+ *
+ **/
+float reverse_square(float x0){
+	union {int ix; float x;};
+
+	x = x0;								// x can be viewed as int.
+	float xhalf = 0.5f*x;
+	ix = 0x5F375A82 - (ix >> 1);		// Initial guess.
+	x = x*(1.5f - xhalf*x*x);			// Newton step.
+	return x; 
+}
