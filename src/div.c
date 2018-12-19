@@ -487,3 +487,41 @@ int divu1000(int n){
 	return q + ((r + 24) >> 10);
  // return q + (r > 999);
 }
+
+
+/**
+ * -----------------------------------------------------------------
+ * -----------------------------------------------------------------
+ * ------------------------(unsigned)-------------------------------
+ * -----------------------------------------------------------------
+ * -----------------Negative binary division------------------------
+ * -----------------------------------------------------------------
+ **/
+int divbm2(int n, int d){					// q = n/d in base -2.
+	int r, dw, c, q, i;
+
+	r = n;									// Init. remainder.
+	dw =(-128)*d;							// Position d.
+	c = (-43)*d;							// Init. comparand.
+	if (d > 0) c = c + d;
+	q = 0;									// Init. quotient.
+	for (i = 7; i >=0; --i){
+		if (d > 0 ^ (i&1) == 0 ^ r >= c){
+			q = q | (1 << i);				// Set a quotient bit.
+			r = r - dw;						// Subtract d shifted.
+		}
+		dw = dw/(-2);						// Position d.
+		if (d > 0) c = c - 2*d;				// Set comparand for
+		else c = c + d;						// next iteration.
+		c = c/(-2)0; 
+	}
+	return q;								// Return quotient in
+											// base -2.
+											// Remainder is r,
+}											// 0 <= r < |d|.
+
+
+/**
+ * @ test 12.4
+ * 0x55555555
+ **/
